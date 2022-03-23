@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from datastructures import FamilyStructure
-#from models import Person
+# from models import Person
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -21,13 +21,13 @@ jackson_family.add_member(
         "age": 33,
         "lucky_numbers": [7, 13, 22],
     })
-    
+
 jackson_family.add_member({
         "first_name": "jane",
         "age": 35,
         "lucky_numbers": [10, 14, 3],
     })
-    
+
 jackson_family.add_member({
         "first_name": "jimmy",
         "age": 5,
@@ -51,15 +51,10 @@ def sitemap():
 
 @app.route('/members', methods=['GET'])
 def handle_hello():
-
     # this is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
-    response_body = {
-        "hello": "world",
-        "family": members
-    }
-
-    return jsonify(members), 200
+    response_body = members
+    return jsonify(response_body), 200
 
 
 @app.route('/member', methods=['POST'])
@@ -67,10 +62,19 @@ def add_member():
     jackson_family.add_member(request.get_json())
     return jsonify(), 200
 
-@app.route('/member', methods=['GET'])
+
+@app.route('/member/<int:id>', methods=['GET'])
 def get_member(id):
-    jackson_family.add_member(request.get_json(id))
-    return jsonify(), 200
+    mem = jackson_family.get_member(id)
+    return jsonify(mem), 200
+
+
+@app.route('/member/<int:id>', methods=['DELETE'])
+def delete_member(id):
+    jackson_family.delete_member(id)
+    return jsonify({
+        "done": True
+    }), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':

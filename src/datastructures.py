@@ -27,20 +27,24 @@ class FamilyStructure:
             member["id"] = self._generateId()
             self._members.append(member)
 
-
     def delete_member(self, id: int):
         # fill this method and update the return
-        pass
-
-    def get_member(self, id: int):
-        # fill this method and update the return
-        filtered_members = list(filter(
-        lambda x: x ["id"] == id,
-        self._members
-    ))
-
-        return filtered_members.pop()
+        filtered_members = list(
+            filter(
+                lambda x: x["id"] != id,
+                self._members
+        ))
+        self._members = filtered_members
         
+    def get_member(self, id: int):
+        filtered_members=list(
+            filter(
+                lambda x: x["id"] == id,
+                self._members
+            )
+        )
+        return filtered_members.pop()
+
 
     # this method is done, it returns a list with all the family members
     def get_all_members(self):
